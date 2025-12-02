@@ -1,7 +1,7 @@
 import axios from "axios";
 
-//const baseURL = "http://localhost:8080/hiranyagarbha";
-const baseURL = "https://hiranyagarbha.onrender.com/hiranyagarbha";
+//const baseURL = "http://localhost:8090/mateandmentors";
+const baseURL = "https://mateandmentors.onrender.com/mateandmentors";
 
 const axiosInstance = axios.create({
   baseURL,
