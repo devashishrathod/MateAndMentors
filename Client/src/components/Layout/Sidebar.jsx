@@ -56,11 +56,18 @@ const Sidebar = () => {
             name: "Mentors",
             path: "/mentors",
             icon: icons.mentors,
-            color: "text-yellow-500",
+            color: "text-blue-500",
           },
+          
           {
             name: "Mentees",
             path: "/mentees",
+            icon: icons.mentees,
+            color: "text-pink-500",
+          },
+          {
+            name: "Add Mentee",
+            path: "/mentee/add",
             icon: icons.mentees,
             color: "text-red-500",
           },

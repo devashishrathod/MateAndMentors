@@ -506,7 +506,7 @@ const DashboardPage = () => {
             <div className="absolute inset-0 rounded-full h-20 w-20 border-4 border-transparent border-r-purple-400 animate-ping mx-auto"></div>
           </div>
           <p className="text-xl bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent font-semibold">
-            Loading Healthcare Dashboard...
+            Loading....
           </p>
         </div>
       </div>
