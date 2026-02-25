@@ -31,7 +31,7 @@ const Sidebar = () => {
     const commonItems = [
       {
         name: "Dashboard",
-        path: "/dashboard",
+        path: "/",
         icon: icons.dashboard,
         color: "text-blue-500",
       },
