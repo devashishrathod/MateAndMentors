@@ -36,7 +36,7 @@ const getDashboard = async (req, res) => {
     // Get recent users (last 7 days)
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-    
+
     const recentUsers = await User.countDocuments({
       isDeleted: false,
       createdAt: { $gte: sevenDaysAgo },
@@ -47,11 +47,11 @@ const getDashboard = async (req, res) => {
     sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
 
     const usersByMonth = await User.aggregate([
-      { 
-        $match: { 
+      {
+        $match: {
           isDeleted: false,
-          createdAt: { $gte: sixMonthsAgo }
-        }
+          createdAt: { $gte: sixMonthsAgo },
+        },
       },
       {
         $group: {
@@ -96,12 +96,36 @@ const getDashboard = async (req, res) => {
     ];
 
     const selles = [
-      { title: "Jan", totalRevenue: Math.floor(Math.random() * 50000) + 10000, totalQuantitySold: Math.floor(Math.random() * 100) + 20 },
-      { title: "Feb", totalRevenue: Math.floor(Math.random() * 50000) + 10000, totalQuantitySold: Math.floor(Math.random() * 100) + 20 },
-      { title: "Mar", totalRevenue: Math.floor(Math.random() * 50000) + 10000, totalQuantitySold: Math.floor(Math.random() * 100) + 20 },
-      { title: "Apr", totalRevenue: Math.floor(Math.random() * 50000) + 10000, totalQuantitySold: Math.floor(Math.random() * 100) + 20 },
-      { title: "May", totalRevenue: Math.floor(Math.random() * 50000) + 10000, totalQuantitySold: Math.floor(Math.random() * 100) + 20 },
-      { title: "Jun", totalRevenue: Math.floor(Math.random() * 50000) + 10000, totalQuantitySold: Math.floor(Math.random() * 100) + 20 },
+      {
+        title: "Jan",
+        totalRevenue: Math.floor(Math.random() * 50000) + 10000,
+        totalQuantitySold: Math.floor(Math.random() * 100) + 20,
+      },
+      {
+        title: "Feb",
+        totalRevenue: Math.floor(Math.random() * 50000) + 10000,
+        totalQuantitySold: Math.floor(Math.random() * 100) + 20,
+      },
+      {
+        title: "Mar",
+        totalRevenue: Math.floor(Math.random() * 50000) + 10000,
+        totalQuantitySold: Math.floor(Math.random() * 100) + 20,
+      },
+      {
+        title: "Apr",
+        totalRevenue: Math.floor(Math.random() * 50000) + 10000,
+        totalQuantitySold: Math.floor(Math.random() * 100) + 20,
+      },
+      {
+        title: "May",
+        totalRevenue: Math.floor(Math.random() * 50000) + 10000,
+        totalQuantitySold: Math.floor(Math.random() * 100) + 20,
+      },
+      {
+        title: "Jun",
+        totalRevenue: Math.floor(Math.random() * 50000) + 10000,
+        totalQuantitySold: Math.floor(Math.random() * 100) + 20,
+      },
     ];
 
     const today = {
@@ -109,10 +133,12 @@ const getDashboard = async (req, res) => {
       totalRevenue: Math.floor(Math.random() * 10000) + 1000,
     };
 
-    const todaysAppointments = Array(Math.floor(Math.random() * 10) + 1).fill(null).map((_, i) => ({
-      _id: `apt-${i}`,
-      name: `Appointment ${i + 1}`,
-    }));
+    const todaysAppointments = Array(Math.floor(Math.random() * 10) + 1)
+      .fill(null)
+      .map((_, i) => ({
+        _id: `apt-${i}`,
+        name: `Appointment ${i + 1}`,
+      }));
 
     res.status(200).json({
       success: true,
@@ -125,7 +151,7 @@ const getDashboard = async (req, res) => {
         totalSubscriptions,
         totalBanners,
         recentUsers,
-        
+
         // Chart data
         statusCounts,
         testCountsByStatus,
@@ -133,7 +159,7 @@ const getDashboard = async (req, res) => {
         usersByRole,
         usersByMonth,
         productsByCategory,
-        
+
         // Today's data
         today,
         todaysAppointments,
