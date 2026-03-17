@@ -3,6 +3,8 @@ module.exports = {
     ADMIN: "admin",
     STAFF: "staff",
     USER: "user",
+    MATE: "mate",
+    MENTOR: "mentor",
   }),
 
   LOGIN_TYPES: Object.freeze({

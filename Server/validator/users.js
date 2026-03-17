@@ -1,4 +1,5 @@
 const Joi = require("joi");
+const objectId = require("./validJoiObjectId");
 
 exports.validateUpdateUser = (data) => {
   const schema = Joi.object({
@@ -20,6 +21,18 @@ exports.validateUpdateUser = (data) => {
       "number.base": "Mobile number must be numeric",
       "number.min": "Mobile number must be 10 digits",
       "number.max": "Mobile number must be 10 digits",
+    }),
+    categoryId: objectId().messages({ "any.invalid": "Invalid categoryId" }),
+    pricePerHour: Joi.number().positive().messages({
+      "number.base": "pricePerHour must be numeric",
+      "number.positive": "pricePerHour must be > 0",
+    }),
+    experience: Joi.number().min(0).messages({
+      "number.base": "experience must be numeric",
+      "number.min": "experience must be >= 0",
+    }),
+    specifications: Joi.array().items(Joi.string().trim()).messages({
+      "array.base": "specifications must be an array",
     }),
   });
   return schema.validate(data, { abortEarly: false });
