@@ -17,6 +17,20 @@ const API_ENDPOINTS = {
     GET_ALL: "/categories/getAll",
     GET_ONE: "/categories/get/:id",
   },
+  MENTORS: {
+    CREATE: "/mentors/create",
+    GET_ALL: "/mentors/getAll",
+    GET_ONE: "/mentors/get/:id",
+    UPDATE: "/mentors/update/:id",
+    DELETE: "/mentors/delete/:id",
+  },
+  MENTEES: {
+    CREATE: "/mentees/create",
+    GET_ALL: "/mentees/getAll",
+    GET_ONE: "/mentees/get/:id",
+    UPDATE: "/mentees/update/:id",
+    DELETE: "/mentees/delete/:id",
+  },
 };
 
 export default API_ENDPOINTS;
