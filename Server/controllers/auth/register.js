@@ -37,13 +37,13 @@ exports.register = asyncWrapper(async (req, res) => {
   if (isMate) {
     // if (!categoryId) throwError(422, "categoryId is required");
     // validateObjectId(categoryId, "categoryId");
-    if (typeof pricePerMin === "undefined")
-      throwError(422, "pricePerMin is required");
+    // if (typeof pricePerMin === "undefined")
+    //   throwError(422, "pricePerMin is required");
     if (Number(pricePerMin) <= 0) throwError(422, "pricePerMin must be > 0");
-    if (typeof priceUnit === "undefined")
-      throwError(422, "priceUnit is required");
-    if (typeof experience === "undefined")
-      throwError(422, "experience is required");
+    // if (typeof priceUnit === "undefined")
+    //   throwError(422, "priceUnit is required");
+    // if (typeof experience === "undefined")
+    //   throwError(422, "experience is required");
     if (Number(experience) < 0) throwError(422, "experience must be >= 0");
     if (typeof specifications !== "undefined") {
       if (!Array.isArray(specifications)) {
