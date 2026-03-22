@@ -39,12 +39,16 @@ exports.register = asyncWrapper(async (req, res) => {
     // validateObjectId(categoryId, "categoryId");
     // if (typeof pricePerMin === "undefined")
     //   throwError(422, "pricePerMin is required");
-    if (Number(pricePerMin) <= 0) throwError(422, "pricePerMin must be > 0");
+    if (pricePerMin && Number(pricePerMin) <= 0) {
+      throwError(422, "pricePerMin must be > 0");
+    }
     // if (typeof priceUnit === "undefined")
     //   throwError(422, "priceUnit is required");
     // if (typeof experience === "undefined")
     //   throwError(422, "experience is required");
-    if (Number(experience) < 0) throwError(422, "experience must be >= 0");
+    if (experience && Number(experience) < 0) {
+      throwError(422, "experience must be >= 0");
+    }
     if (typeof specifications !== "undefined") {
       if (!Array.isArray(specifications)) {
         throwError(422, "specifications must be an array");
@@ -101,9 +105,9 @@ exports.register = asyncWrapper(async (req, res) => {
       email: user.email,
       mobile: user.mobile,
       // categoryId,
-      pricePerMin: Number(pricePerMin),
-      priceUnit,
-      experience: Number(experience),
+      pricePerMin: pricePerMin ? Number(pricePerMin) : 12,
+      priceUnit: priceUnit || "RUPEE",
+      experience: experience ? Number(experience) : 0,
       specifications,
       languages,
     };
