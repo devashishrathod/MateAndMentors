@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+// const mongoose = require("mongoose");
 const User = require("../../models/User");
 const { pagination, throwError } = require("../../utils");
 const { ROLES } = require("../../constants");
@@ -8,17 +8,23 @@ exports.getAllUsers = async (query) => {
     page,
     limit,
     role,
+    language,
+    languages,
     search,
     name,
     email,
     mobile,
     isActive,
-    categoryId,
+    // categoryId,
     specification,
     specifications,
     pricePerHour,
     minPricePerHour,
     maxPricePerHour,
+    pricePerMin,
+    minPricePerMin,
+    maxPricePerMin,
+    priceUnit,
     experience,
     minExperience,
     maxExperience,
@@ -58,10 +64,16 @@ exports.getAllUsers = async (query) => {
   const needMateJoin =
     (userMatch.role && userMatch.role === ROLES.MATE) ||
     typeof role === "undefined" ||
-    typeof categoryId !== "undefined" ||
+    typeof language !== "undefined" ||
+    typeof languages !== "undefined" ||
+    // typeof categoryId !== "undefined" ||
     typeof pricePerHour !== "undefined" ||
     typeof minPricePerHour !== "undefined" ||
     typeof maxPricePerHour !== "undefined" ||
+    typeof pricePerMin !== "undefined" ||
+    typeof minPricePerMin !== "undefined" ||
+    typeof maxPricePerMin !== "undefined" ||
+    typeof priceUnit !== "undefined" ||
     typeof experience !== "undefined" ||
     typeof minExperience !== "undefined" ||
     typeof maxExperience !== "undefined" ||
@@ -95,18 +107,39 @@ exports.getAllUsers = async (query) => {
 
     const mateMatch = {};
 
-    if (categoryId) {
-      mateMatch["mate.categoryId"] = new mongoose.Types.ObjectId(categoryId);
+    const langs = languages || language;
+    if (langs) {
+      const arr = Array.isArray(langs)
+        ? langs
+        : String(langs)
+            .split(",")
+            .map((s) => s.trim())
+            .filter(Boolean);
+      if (arr.length) mateMatch["mate.languages"] = { $in: arr };
     }
 
-    if (typeof pricePerHour !== "undefined") {
-      mateMatch["mate.pricePerHour"] = Number(pricePerHour);
-    } else if (minPricePerHour || maxPricePerHour) {
-      mateMatch["mate.pricePerHour"] = {};
-      if (minPricePerHour)
-        mateMatch["mate.pricePerHour"].$gte = Number(minPricePerHour);
-      if (maxPricePerHour)
-        mateMatch["mate.pricePerHour"].$lte = Number(maxPricePerHour);
+    if (priceUnit)
+      mateMatch["mate.priceUnit"] = String(priceUnit).toUpperCase();
+
+    // if (categoryId) {
+    //   mateMatch["mate.categoryId"] = new mongoose.Types.ObjectId(categoryId);
+    // }
+
+    const effectivePricePerMin =
+      typeof pricePerMin !== "undefined" ? pricePerMin : pricePerHour;
+    const effectiveMinPricePerMin =
+      typeof minPricePerMin !== "undefined" ? minPricePerMin : minPricePerHour;
+    const effectiveMaxPricePerMin =
+      typeof maxPricePerMin !== "undefined" ? maxPricePerMin : maxPricePerHour;
+
+    if (typeof effectivePricePerMin !== "undefined") {
+      mateMatch["mate.pricePerMin"] = Number(effectivePricePerMin);
+    } else if (effectiveMinPricePerMin || effectiveMaxPricePerMin) {
+      mateMatch["mate.pricePerMin"] = {};
+      if (effectiveMinPricePerMin)
+        mateMatch["mate.pricePerMin"].$gte = Number(effectiveMinPricePerMin);
+      if (effectiveMaxPricePerMin)
+        mateMatch["mate.pricePerMin"].$lte = Number(effectiveMaxPricePerMin);
     }
 
     if (typeof experience !== "undefined") {
@@ -132,14 +165,14 @@ exports.getAllUsers = async (query) => {
 
     if (Object.keys(mateMatch).length) pipeline.push({ $match: mateMatch });
 
-    pipeline.push({
-      $lookup: {
-        from: "categories",
-        localField: "mate.categoryId",
-        foreignField: "_id",
-        as: "category",
-      },
-    });
+    // pipeline.push({
+    //   $lookup: {
+    //     from: "categories",
+    //     localField: "mate.categoryId",
+    //     foreignField: "_id",
+    //     as: "category",
+    //   },
+    // });
 
     pipeline.push({
       $unwind: {

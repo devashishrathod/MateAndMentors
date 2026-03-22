@@ -1,5 +1,5 @@
 const Joi = require("joi");
-const objectId = require("./validJoiObjectId");
+// const objectId = require("./validJoiObjectId");
 
 exports.validateUpdateUser = (data) => {
   const schema = Joi.object({
@@ -22,10 +22,13 @@ exports.validateUpdateUser = (data) => {
       "number.min": "Mobile number must be 10 digits",
       "number.max": "Mobile number must be 10 digits",
     }),
-    categoryId: objectId().messages({ "any.invalid": "Invalid categoryId" }),
-    pricePerHour: Joi.number().positive().messages({
-      "number.base": "pricePerHour must be numeric",
-      "number.positive": "pricePerHour must be > 0",
+    // categoryId: objectId().messages({ "any.invalid": "Invalid categoryId" }),
+    pricePerMin: Joi.number().positive().messages({
+      "number.base": "pricePerMin must be numeric",
+      "number.positive": "pricePerMin must be > 0",
+    }),
+    priceUnit: Joi.string().valid("RUPEE", "USD").messages({
+      "any.only": "priceUnit must be one of RUPEE, USD",
     }),
     experience: Joi.number().min(0).messages({
       "number.base": "experience must be numeric",
@@ -33,6 +36,12 @@ exports.validateUpdateUser = (data) => {
     }),
     specifications: Joi.array().items(Joi.string().trim()).messages({
       "array.base": "specifications must be an array",
+    }),
+    language: Joi.string().trim().messages({
+      "string.base": "language must be a string",
+    }),
+    languages: Joi.array().items(Joi.string().trim()).messages({
+      "array.base": "languages must be an array",
     }),
   });
   return schema.validate(data, { abortEarly: false });

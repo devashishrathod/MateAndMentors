@@ -39,20 +39,20 @@ exports.getUserById = async (userId) => {
         preserveNullAndEmptyArrays: true,
       },
     },
-    {
-      $lookup: {
-        from: "categories",
-        localField: "mate.categoryId",
-        foreignField: "_id",
-        as: "category",
-      },
-    },
-    {
-      $unwind: {
-        path: "$category",
-        preserveNullAndEmptyArrays: true,
-      },
-    },
+    // {
+    //   $lookup: {
+    //     from: "categories",
+    //     localField: "mate.categoryId",
+    //     foreignField: "_id",
+    //     as: "category",
+    //   },
+    // },
+    // {
+    //   $unwind: {
+    //     path: "$category",
+    //     preserveNullAndEmptyArrays: true,
+    //   },
+    // },
     {
       $project: {
         password: 0,
@@ -63,7 +63,6 @@ exports.getUserById = async (userId) => {
       },
     },
   ];
-
   const data = await User.aggregate(pipeline);
   const enriched = data?.[0];
   return enriched || user;

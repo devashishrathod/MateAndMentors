@@ -9,8 +9,8 @@ const {
 } = require("../controllers/users");
 const { verifyJwtToken } = require("../middlewares");
 
-router.get("/get", verifyJwtToken, getUser);
-router.get("/getAll", verifyJwtToken, getAllUsers);
+router.get("/get", getUser);
+router.get("/getAll", getAllUsers);
 router.put("/update", verifyJwtToken, updateUser);
 router.delete("/delete", verifyJwtToken, deleteUser);
 

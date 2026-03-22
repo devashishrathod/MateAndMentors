@@ -4,7 +4,7 @@ const { throwError } = require("../../utils");
 const { uploadImage, deleteImage } = require("../uploads");
 const { isAdult } = require("../../helpers/users");
 const { ROLES } = require("../../constants");
-const { validateObjectId } = require("../../utils");
+// const { validateObjectId } = require("../../utils");
 
 exports.updateUserById = async (userId, payload, image) => {
   const user = await User.findById(userId);
@@ -19,10 +19,12 @@ exports.updateUserById = async (userId, payload, image) => {
       mobile,
       dob,
       address,
-      categoryId,
-      pricePerHour,
+      // categoryId,
+      pricePerMin,
+      priceUnit,
       experience,
       specifications,
+      languages,
     } = payload;
     if (name) user.name = name?.toLowerCase();
     if (address) user.address = address?.toLowerCase();
@@ -59,14 +61,17 @@ exports.updateUserById = async (userId, payload, image) => {
     }
 
     if (isMate) {
-      if (typeof categoryId !== "undefined") {
-        validateObjectId(categoryId, "categoryId");
-        mateUpdate.categoryId = categoryId;
+      // if (typeof categoryId !== "undefined") {
+      //   validateObjectId(categoryId, "categoryId");
+      //   mateUpdate.categoryId = categoryId;
+      // }
+      if (typeof pricePerMin !== "undefined") {
+        if (Number(pricePerMin) <= 0)
+          throwError(422, "pricePerMin must be > 0");
+        mateUpdate.pricePerMin = Number(pricePerMin);
       }
-      if (typeof pricePerHour !== "undefined") {
-        if (Number(pricePerHour) <= 0)
-          throwError(422, "pricePerHour must be > 0");
-        mateUpdate.pricePerHour = Number(pricePerHour);
+      if (typeof priceUnit !== "undefined") {
+        mateUpdate.priceUnit = String(priceUnit).toUpperCase();
       }
       if (typeof experience !== "undefined") {
         if (Number(experience) < 0) throwError(422, "experience must be >= 0");
@@ -79,6 +84,15 @@ exports.updateUserById = async (userId, payload, image) => {
         mateUpdate.specifications = specifications
           .filter((s) => typeof s === "string")
           .map((s) => s.trim())
+          .filter(Boolean);
+      }
+      if (typeof languages !== "undefined") {
+        if (!Array.isArray(languages)) {
+          throwError(422, "languages must be an array");
+        }
+        mateUpdate.languages = languages
+          .filter((l) => typeof l === "string")
+          .map((l) => l.trim())
           .filter(Boolean);
       }
     }
@@ -111,8 +125,8 @@ exports.updateUserById = async (userId, payload, image) => {
         );
       } else {
         const canCreateMate =
-          typeof mateUpdate.categoryId !== "undefined" &&
-          typeof mateUpdate.pricePerHour !== "undefined" &&
+          // typeof mateUpdate.categoryId !== "undefined" &&
+          typeof mateUpdate.pricePerMin !== "undefined" &&
           typeof mateUpdate.experience !== "undefined";
 
         if (canCreateMate) {
@@ -125,7 +139,6 @@ exports.updateUserById = async (userId, payload, image) => {
       }
     }
   }
-
   const { password, otp, ...userData } = user.toObject();
   return userData;
 };
