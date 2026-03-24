@@ -14,23 +14,23 @@ const { validateRoles } = require("../middlewares/validateRoles");
 
 // User routes
 router.post("/order/create", verifyJwtToken, createWalletTopupOrder);
-router.post("/verify", verifyJwtToken, verifyWalletTopup.verifyWalletTopup);
-router.get("/", verifyJwtToken, getWallet.getWallet);
-router.get("/history", verifyJwtToken, getWalletHistory.getWalletHistory);
+router.post("/verify", verifyJwtToken, verifyWalletTopup);
+router.get("/", verifyJwtToken, getWallet);
+router.get("/history", verifyJwtToken, getWalletHistory);
 
 // Admin routes
 router.get(
   "/admin/history",
   verifyJwtToken,
   validateRoles(["ADMIN"]),
-  getAdminWalletHistory.getAdminWalletHistory,
+  getAdminWalletHistory,
 );
 
 // Razorpay webhook (no auth)
 router.post(
   "/webhook/razorpay",
   express.raw({ type: "application/json" }),
-  webhookHandler.webhookHandler,
+  webhookHandler,
 );
 
 module.exports = router;

@@ -1,3 +1,5 @@
+const mongoose = require("mongoose")
+
 const callLogSchema = new mongoose.Schema({
     callSessionId: {
         type: mongoose.Schema.Types.ObjectId,
