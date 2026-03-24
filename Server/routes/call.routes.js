@@ -20,28 +20,28 @@ const validate = (schema) => {
 router.post(
     '/initiate',
     verifyJwtToken,
-    validate(initiateCallSchema),
+   // validate(initiateCallSchema), 
     callController.initiateCall
 );
 
 router.post(
     '/accept',
     verifyJwtToken,
-    validate(callStatusSchema),
+  //  validate(callStatusSchema),
     callController.acceptCall
 );
 
 router.post(
     '/reject',
     verifyJwtToken,
-    validate(callStatusSchema),
+ // validate(callStatusSchema),
     callController.rejectCall
 );
 
 router.post(
     '/end',
     verifyJwtToken,
-    validate(callStatusSchema),
+  //  validate(callStatusSchema),
     callController.endCall
 );
 
