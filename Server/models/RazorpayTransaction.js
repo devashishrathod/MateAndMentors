@@ -44,12 +44,9 @@ const razorpayTransactionSchema = new mongoose.Schema(
   { timestamps: true, versionKey: false },
 );
 
-razorpayTransactionSchema.index(
-  { razorpayPaymentId: 1 },
-  { unique: true, sparse: true },
-);
+// razorpayTransactionSchema.index(
+//   { razorpayPaymentId: 1 },
+//   { unique: true, sparse: true },
+// );
 
-module.exports = mongoose.model(
-  "RazorpayTransaction",
-  razorpayTransactionSchema,
-);
+module.exports = mongoose.model("RazorpayTransaction", razorpayTransactionSchema,);

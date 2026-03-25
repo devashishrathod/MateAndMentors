@@ -1,10 +1,12 @@
 const admin = require('firebase-admin');
-
+//const serviceAccount = require('../firebaseServiceKeys.json');
+const serviceAccountPath = process.env.FIREBASE_SERVICE_ACCOUNT_PATH;
 // Since we may not have the service account key uploaded yet,
 // we will instantiate it via standard env variables or ignore init if credentials don't exist yet, 
 // to prevent the app from crashing on start if not configured.
 
 let isFirebaseInitialized = false;
+
 
 try {
     // Attempting to init using default application credentials (e.g. from FIREBASE_CONFIG env)
@@ -14,8 +16,8 @@ try {
     // Alternatively, you can use a serviceAccountKey.json path.
     if (!admin.apps.length) {
         // Option A: If a path to service account json is in environment variables (e.g. FIREBASE_SERVICE_ACCOUNT_PATH)
-        if (process.env.FIREBASE_SERVICE_ACCOUNT_PATH) {
-            const serviceAccount = require(process.env.FIREBASE_SERVICE_ACCOUNT_PATH);
+        if (serviceAccountPath) {
+            const serviceAccount = require(serviceAccountPath);
             admin.initializeApp({
                 credential: admin.credential.cert(serviceAccount)
             });
