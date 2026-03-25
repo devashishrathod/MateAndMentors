@@ -11,7 +11,7 @@ const MINIMUM_BALANCE_REQUIRED = 12;
 
 const initiateCall = async (req, res, next) => {
     try {
-        const callerId = req.user.id;
+        const callerId = req.userId
         const { receiverId, callType } = req.body;
 
         // Check wallet balance
@@ -86,13 +86,13 @@ const initiateCall = async (req, res, next) => {
 
 const acceptCall = async (req, res, next) => {
     try {
-        const receiverId = req.user.id;
+        const receiverId = req.userId
         const { callSessionId } = req.body;
 
         const callSession = await CallSession.findById(callSessionId).populate("callerId");
         if (!callSession) return throwError(404, "Call Session not found");
 
-        if (callSession.receiverId.toString() !== receiverId.toString()) {
+        if (callSession?.receiverId?.toString() !== receiverId?.toString()) {
             return throwError(403, "You are not authorized to accept this call");
         }
 
@@ -143,7 +143,7 @@ const acceptCall = async (req, res, next) => {
 
 const rejectCall = async (req, res, next) => {
     try {
-        const receiverId = req.user.id;
+        const receiverId = req.userId
         const { callSessionId } = req.body;
 
         const callSession = await CallSession.findById(callSessionId).populate("callerId");
@@ -190,7 +190,7 @@ const rejectCall = async (req, res, next) => {
 
 const endCall = async (req, res, next) => {
     try {
-        const userId = req.user.id;
+        const userId = req.userId
         const { callSessionId } = req.body;
 
         const callSession = await CallSession.findById(callSessionId);
@@ -260,7 +260,7 @@ const endCall = async (req, res, next) => {
 
 const getCallHistory = async (req, res, next) => {
     try {
-        const userId = req.user.id;
+        const userId = req.userId
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 10;
 
