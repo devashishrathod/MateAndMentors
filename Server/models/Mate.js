@@ -12,6 +12,7 @@ const mateSchema = new mongoose.Schema(
     name: { type: String },
     email: { type: String, lowercase: true, trim: true },
     mobile: { type: Number },
+    bio: { type: String },
     // categoryId: {
     //   type: mongoose.Schema.Types.ObjectId,
     //   ref: "Category",
@@ -28,6 +29,7 @@ const mateSchema = new mongoose.Schema(
     experience: { type: Number, required: true, index: true },
     specifications: { type: [String], default: [], index: true },
     languages: { type: [String], default: [], index: true },
+    isAvailable: { type: Boolean, default: true },
     isActive: { type: Boolean, default: true },
     isDeleted: { type: Boolean, default: false, index: true },
   },

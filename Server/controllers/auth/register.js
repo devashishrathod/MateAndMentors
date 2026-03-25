@@ -16,6 +16,7 @@ exports.register = asyncWrapper(async (req, res) => {
     loginType,
     fcmToken,
     // categoryId,
+    bio,
     pricePerMin,
     priceUnit,
     experience,
@@ -28,6 +29,7 @@ exports.register = asyncWrapper(async (req, res) => {
   }
   email = email?.toLowerCase();
   name = name?.toLowerCase();
+  bio = bio?.trim()
   role = role?.toLowerCase() || ROLES.USER;
   loginType = loginType?.toLowerCase() || LOGIN_TYPES.PASSWORD;
   const isMate = role === ROLES.MATE;
@@ -50,10 +52,8 @@ exports.register = asyncWrapper(async (req, res) => {
       throwError(422, "experience must be >= 0");
     }
     if (typeof specifications !== "undefined") {
-      if (!Array.isArray(specifications)) {
-        throwError(422, "specifications must be an array");
-      }
-      specifications = specifications
+      const specificationsArr = Array.isArray(specifications) ? specifications : specifications.split(",");
+      specifications = specificationsArr
         .filter((s) => typeof s === "string")
         .map((s) => s.trim())
         .filter(Boolean);
@@ -61,10 +61,8 @@ exports.register = asyncWrapper(async (req, res) => {
       specifications = [];
     }
     if (typeof languages !== "undefined") {
-      if (!Array.isArray(languages)) {
-        throwError(422, "languages must be an array");
-      }
-      languages = languages
+      const languagesArr = Array.isArray(languages) ? languages : languages.split(",");
+      languages = languagesArr
         .filter((l) => typeof l === "string")
         .map((l) => l.trim())
         .filter(Boolean);
@@ -104,6 +102,7 @@ exports.register = asyncWrapper(async (req, res) => {
       name: user.name,
       email: user.email,
       mobile: user.mobile,
+      bio,
       // categoryId,
       pricePerMin: pricePerMin ? Number(pricePerMin) : 12,
       priceUnit: priceUnit || "RUPEE",

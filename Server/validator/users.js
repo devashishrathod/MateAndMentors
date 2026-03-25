@@ -23,6 +23,9 @@ exports.validateUpdateUser = (data) => {
       "number.max": "Mobile number must be 10 digits",
     }),
     // categoryId: objectId().messages({ "any.invalid": "Invalid categoryId" }),
+    bio: Joi.string().allow("").max(300).messages({
+      "string.max": "Bio cannot exceed {#limit} characters",
+    }),
     pricePerMin: Joi.number().positive().messages({
       "number.base": "pricePerMin must be numeric",
       "number.positive": "pricePerMin must be > 0",
@@ -37,11 +40,14 @@ exports.validateUpdateUser = (data) => {
     specifications: Joi.array().items(Joi.string().trim()).messages({
       "array.base": "specifications must be an array",
     }),
-    language: Joi.string().trim().messages({
-      "string.base": "language must be a string",
-    }),
     languages: Joi.array().items(Joi.string().trim()).messages({
       "array.base": "languages must be an array",
+    }),
+    isAvailable: Joi.boolean().messages({
+      "boolean.base": "isAvailable must be a boolean",
+    }),
+    isActive: Joi.boolean().messages({
+      "boolean.base": "isActive must be a boolean",
     }),
   });
   return schema.validate(data, { abortEarly: false });

@@ -19,12 +19,15 @@ exports.updateUserById = async (userId, payload, image) => {
       mobile,
       dob,
       address,
+      bio,
       // categoryId,
       pricePerMin,
       priceUnit,
       experience,
       specifications,
       languages,
+      isActive,
+      isAvailable
     } = payload;
     if (name) user.name = name?.toLowerCase();
     if (address) user.address = address?.toLowerCase();
@@ -59,12 +62,20 @@ exports.updateUserById = async (userId, payload, image) => {
       user.mobile = mobile;
       user.isMobileVerified = false;
     }
-
+    if (isActive !== undefined) {
+      user.isActive = isActive;
+    }
     if (isMate) {
       // if (typeof categoryId !== "undefined") {
       //   validateObjectId(categoryId, "categoryId");
       //   mateUpdate.categoryId = categoryId;
       // }
+      if (isAvailable !== undefined) {
+        mateUpdate.isAvailable = isAvailable;
+      }
+      if (bio !== undefined) {
+        mateUpdate.bio = bio?.trim()
+      }
       if (typeof pricePerMin !== "undefined") {
         if (Number(pricePerMin) <= 0)
           throwError(422, "pricePerMin must be > 0");
@@ -78,19 +89,15 @@ exports.updateUserById = async (userId, payload, image) => {
         mateUpdate.experience = Number(experience);
       }
       if (typeof specifications !== "undefined") {
-        if (!Array.isArray(specifications)) {
-          throwError(422, "specifications must be an array");
-        }
-        mateUpdate.specifications = specifications
+        const specificationsArr = Array.isArray(specifications) ? specifications : specifications.split(",");
+        mateUpdate.specifications = specificationsArr
           .filter((s) => typeof s === "string")
           .map((s) => s.trim())
           .filter(Boolean);
       }
       if (typeof languages !== "undefined") {
-        if (!Array.isArray(languages)) {
-          throwError(422, "languages must be an array");
-        }
-        mateUpdate.languages = languages
+        const languagesArr = Array.isArray(languages) ? languages : languages.split(",");
+        mateUpdate.languages = languagesArr
           .filter((l) => typeof l === "string")
           .map((l) => l.trim())
           .filter(Boolean);
