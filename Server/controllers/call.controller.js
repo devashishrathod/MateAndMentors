@@ -29,7 +29,7 @@ const initiateCall = async (req, res, next) => {
 
         // EnableX - Create Room
         const roomName = `Call_${callerId}_to_${receiverId}`;
-        const roomData = await createRoom(roomName);
+        const roomData = await createRoom(roomName, callType);
         const roomId = roomData.room.room_id;
 
         // Create Token for Caller
@@ -221,15 +221,12 @@ const endCall = async (req, res, next) => {
                 );
             }
         }
-
         await callSession.save();
-
         await CallLog.create({
             callSessionId: callSession._id,
             event: "ENDED",
             meta: { endedBy: userId, duration: callSession.duration, amount: callSession.totalAmountDeducted }
         });
-
         // Notify the other party if needed
         const otherPartyId = callSession.callerId.toString() === userId.toString() ? callSession.receiverId : callSession.callerId;
         const otherPartyUser = await User.findById(otherPartyId);
@@ -244,7 +241,6 @@ const endCall = async (req, res, next) => {
                 data: { event: "ENDED" }
             });
         }
-
         return res.status(200).json({
             success: true,
             message: "Call ended successfully",

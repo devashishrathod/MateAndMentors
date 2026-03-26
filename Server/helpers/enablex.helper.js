@@ -1,6 +1,6 @@
 const { enablexAxios } = require('../configs/enablex');
 
-const createRoom = async (name) => {
+const createRoom = async (name, callType) => {
     try {
         const payload = {
             name: name || 'MateAndMentors Call Room',
@@ -15,7 +15,9 @@ const createRoom = async (name) => {
                 quality: 'SD',
             },
         };
-
+        if (callType === "AUDIO") {
+            payload.settings.media_type = "audio_only"
+        }
         const response = await enablexAxios.post('/rooms', payload);
         if (response.data && response.data.room) {
             return response.data;
@@ -34,7 +36,6 @@ const createToken = async (roomId, userRef, role = 'participant') => {
             role: role,
             user_ref: userRef,
         };
-
         const response = await enablexAxios.post(`/rooms/${roomId}/tokens`, payload);
         if (response.data && response.data.token) {
             return response.data.token;
@@ -46,7 +47,4 @@ const createToken = async (roomId, userRef, role = 'participant') => {
     }
 };
 
-module.exports = {
-    createRoom,
-    createToken,
-};
+module.exports = { createRoom, createToken, };
