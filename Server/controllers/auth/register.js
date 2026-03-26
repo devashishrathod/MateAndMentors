@@ -4,6 +4,7 @@ const Mate = require("../../models/Mate");
 const { ROLES, LOGIN_TYPES } = require("../../constants");
 const { asyncWrapper, sendSuccess, throwError } = require("../../utils");
 const { uploadImage } = require("../../services/uploads");
+const { getOrCreateWallet } = require("../../services/wallet");
 
 exports.register = asyncWrapper(async (req, res) => {
   let {
