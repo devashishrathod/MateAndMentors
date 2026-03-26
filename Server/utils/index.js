@@ -5,6 +5,7 @@ const { pagination } = require("./pagination");
 const { generateOTP } = require("./generateOTP");
 const { validateObjectId } = require("./validateObjectId");
 const { cleanJoiError } = require("./cleanJoiError");
+const { formatName } = require("./formatName");
 
 module.exports = {
   CustomError,
@@ -16,4 +17,5 @@ module.exports = {
   pagination,
   generateOTP,
   validateObjectId,
+  formatName,
 };

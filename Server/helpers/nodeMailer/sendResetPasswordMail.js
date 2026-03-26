@@ -1,4 +1,5 @@
 const nodemailer = require("nodemailer");
+const { formatName } = require("../../utils");
 
 exports.sendResetPasswordMail = async ({ email, name, resetLink }) => {
   const transporter = nodemailer.createTransport({
@@ -11,6 +12,7 @@ exports.sendResetPasswordMail = async ({ email, name, resetLink }) => {
   });
 
   const appName = process.env.APP_NAME || "Mate & Mentors";
+  const userName = name ? formatName(name) : "User";
 
   const mailOptions = {
     from: process.env.NODEMAILER_EMAIL,
@@ -20,7 +22,7 @@ exports.sendResetPasswordMail = async ({ email, name, resetLink }) => {
       <div style="max-width: 600px; margin: auto; padding: 30px; font-family: Arial, sans-serif; background-color: #f9f9ff; border-radius: 10px; border: 1px solid #e0e0ff;">
         <h2 style="text-align: center; color: #3f51b5;">Reset Password</h2>
         <p style="font-size: 16px; color: #333;">
-          Hello ${name || ""},<br><br>
+          Hello ${userName},<br><br>
           We received a request to reset your password.
         </p>
 
