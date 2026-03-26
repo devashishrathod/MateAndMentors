@@ -16,9 +16,11 @@ module.exports = {
   }),
 
   PLATFORMS: Object.freeze({
-    WEB: "web",
-    ANDROID: "android",
-    IOS: "ios",
+    WEB: "WEB",
+    // ANDROID: "ANDROID",
+    // IOS: "IOS",
+    APP: "APP",
+    ADMIN: "ADMIN",
   }),
 
   SUBSCRIPTION_TYPES: Object.freeze({

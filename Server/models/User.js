@@ -45,6 +45,8 @@ const userSchema = new mongoose.Schema(
     fcmToken: { type: String },
     image: { type: String },
     otp: { code: String, expiresAt: Date },
+    resetPasswordTokenHash: { type: String, select: false },
+    resetPasswordExpiresAt: { type: Date, select: false },
     // uniqueId: { type: String, unique: true },
     currentScreen: { type: String, default: "LANDING_SCREEN" },
     isEmailVerified: { type: Boolean, default: false },
@@ -56,7 +58,7 @@ const userSchema = new mongoose.Schema(
     isActive: { type: Boolean, default: true },
     isDeleted: { type: Boolean, default: false },
   },
-  { timestamps: true, versionKey: false }
+  { timestamps: true, versionKey: false },
 );
 
 userSchema.methods.getSignedJwtToken = function (options = {}) {
@@ -65,7 +67,7 @@ userSchema.methods.getSignedJwtToken = function (options = {}) {
   return jwt.sign(
     { id: this._id, role: this.role, name: this.name, email: this.email },
     secret,
-    { expiresIn }
+    { expiresIn },
   );
 };
 
