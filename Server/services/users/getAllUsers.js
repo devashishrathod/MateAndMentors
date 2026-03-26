@@ -62,6 +62,7 @@ exports.getAllUsers = async (query) => {
   const pipeline = [{ $match: userMatch }];
 
   const needMateJoin =
+    sortBy === "isAvailable" ||
     (userMatch.role && userMatch.role === ROLES.MATE) ||
     typeof role === "undefined" ||
     typeof language !== "undefined" ||
@@ -112,9 +113,9 @@ exports.getAllUsers = async (query) => {
       const arr = Array.isArray(langs)
         ? langs
         : String(langs)
-            .split(",")
-            .map((s) => s.trim())
-            .filter(Boolean);
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean);
       if (arr.length) mateMatch["mate.languages"] = { $in: arr };
     }
 
@@ -157,9 +158,9 @@ exports.getAllUsers = async (query) => {
       const arr = Array.isArray(specs)
         ? specs
         : String(specs)
-            .split(",")
-            .map((s) => s.trim())
-            .filter(Boolean);
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean);
       if (arr.length) mateMatch["mate.specifications"] = { $in: arr };
     }
 
@@ -193,7 +194,12 @@ exports.getAllUsers = async (query) => {
   });
 
   const sortStage = {};
-  sortStage[sortBy] = sortOrder === "asc" ? 1 : -1;
+  if (sortBy === "isAvailable") {
+    sortStage["mate.isAvailable"] = -1;
+    sortStage["createdAt"] = sortOrder === "asc" ? 1 : -1;
+  } else {
+    sortStage[sortBy] = sortOrder === "asc" ? 1 : -1;
+  }
   pipeline.push({ $sort: sortStage });
 
   try {

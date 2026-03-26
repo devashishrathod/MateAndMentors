@@ -33,7 +33,7 @@ const initiateCall = async (req, res, next) => {
         const roomId = roomData.room.room_id;
 
         // Create Token for Caller
-        const callerToken = await createToken(roomId, callerId.toString(), 'participant');
+        const callerToken = await createToken(roomId, callerId.toString(), callType, 'participant');
 
         // Create Session DB
         const callSession = await CallSession.create({
@@ -102,7 +102,7 @@ const acceptCall = async (req, res, next) => {
         }
 
         // Generate Token for Receiver
-        const receiverToken = await createToken(callSession.roomId, receiverId.toString(), 'participant');
+        const receiverToken = await createToken(callSession.roomId, receiverId.toString(), callSession.callType, 'participant');
 
         callSession.callStatus = "ACCEPTED";
         callSession.tokenReceiver = receiverToken;

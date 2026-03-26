@@ -1,4 +1,4 @@
-const { enablexAxios } = require('../configs/enablex');
+const { enablexAxios, audioEnablexAxios } = require('../configs/enablex');
 
 const createRoom = async (name, callType) => {
     try {
@@ -11,14 +11,22 @@ const createRoom = async (name, callType) => {
                 scheduled: false,
                 duration: 60, // 60 minutes
                 participants: 2,
-                auto_recording: false,
+                auto_recording: true,
                 quality: 'SD',
+                live_recording: {
+                    url: "",
+                    auto_recording: true,
+                    quality: "SD"
+                }
             },
         };
+        let response;
         if (callType === "AUDIO") {
-            payload.settings.media_type = "audio_only"
+            payload.settings.media_type = 'audio_only'
+            response = await audioEnablexAxios.post('/rooms', payload);
+        } else {
+            response = await enablexAxios.post('/rooms', payload);
         }
-        const response = await enablexAxios.post('/rooms', payload);
         if (response.data && response.data.room) {
             return response.data;
         }
@@ -29,14 +37,19 @@ const createRoom = async (name, callType) => {
     }
 };
 
-const createToken = async (roomId, userRef, role = 'participant') => {
+const createToken = async (roomId, userRef, callType, role = 'participant') => {
     try {
         const payload = {
             name: userRef,
             role: role,
             user_ref: userRef,
         };
-        const response = await enablexAxios.post(`/rooms/${roomId}/tokens`, payload);
+        let response;
+        if (callType === "AUDIO") {
+            response = await audioEnablexAxios.post(`/rooms/${roomId}/tokens`, payload);
+        } else {
+            response = await enablexAxios.post(`/rooms/${roomId}/tokens`, payload);
+        }
         if (response.data && response.data.token) {
             return response.data.token;
         }
