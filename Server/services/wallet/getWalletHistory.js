@@ -56,7 +56,8 @@ exports.getWalletHistory = async (userId, query) => {
   try {
     return await pagination(WalletTransaction, pipeline, page, limit);
   } catch (err) {
-    if (err && err.statusCode === 404) throwError(404, "No wallet history found");
+    if (err && err.statusCode === 404)
+      throwError(404, "No wallet history found");
     throw err;
   }
 };

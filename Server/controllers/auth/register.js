@@ -29,7 +29,7 @@ exports.register = asyncWrapper(async (req, res) => {
   }
   email = email?.toLowerCase();
   name = name?.toLowerCase();
-  bio = bio?.trim()
+  bio = bio?.trim();
   role = role?.toLowerCase() || ROLES.USER;
   loginType = loginType?.toLowerCase() || LOGIN_TYPES.PASSWORD;
   const isMate = role === ROLES.MATE;
@@ -52,7 +52,9 @@ exports.register = asyncWrapper(async (req, res) => {
       throwError(422, "experience must be >= 0");
     }
     if (typeof specifications !== "undefined") {
-      const specificationsArr = Array.isArray(specifications) ? specifications : specifications.split(",");
+      const specificationsArr = Array.isArray(specifications)
+        ? specifications
+        : specifications.split(",");
       specifications = specificationsArr
         .filter((s) => typeof s === "string")
         .map((s) => s.trim())
@@ -61,7 +63,9 @@ exports.register = asyncWrapper(async (req, res) => {
       specifications = [];
     }
     if (typeof languages !== "undefined") {
-      const languagesArr = Array.isArray(languages) ? languages : languages.split(",");
+      const languagesArr = Array.isArray(languages)
+        ? languages
+        : languages.split(",");
       languages = languagesArr
         .filter((l) => typeof l === "string")
         .map((l) => l.trim())
@@ -95,7 +99,12 @@ exports.register = asyncWrapper(async (req, res) => {
     isOnline: true,
   };
   user = await User.create(userData);
-
+  let responseMessage = "Mate registered successfully";
+  if (user && !isMate) {
+    await getOrCreateWallet(user._id);
+    responseMessage =
+      "User registered successfully, Welcome! You get 10 minutes free call";
+  }
   if (isMate) {
     const matePayload = {
       userId: user._id,
@@ -113,5 +122,5 @@ exports.register = asyncWrapper(async (req, res) => {
     await Mate.create(matePayload);
   }
   const token = user.getSignedJwtToken();
-  return sendSuccess(res, 201, "User registered successfully", { user, token });
+  return sendSuccess(res, 201, responseMessage, { user, token });
 });

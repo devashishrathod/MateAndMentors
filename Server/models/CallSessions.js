@@ -1,34 +1,35 @@
-const mongoose = require("mongoose")
+const mongoose = require("mongoose");
 
-const callSessionSchema = new mongoose.Schema({
+const callSessionSchema = new mongoose.Schema(
+  {
     callerId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-        required: true,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
     },
     receiverId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-        required: true,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
     },
     callType: {
-        type: String,
-        enum: ["AUDIO", "VIDEO"],
-        required: true,
+      type: String,
+      enum: ["AUDIO", "VIDEO"],
+      required: true,
     },
     callStatus: {
-        type: String,
-        enum: [
-            "INITIATED",
-            "RINGING",
-            "ACCEPTED",
-            "REJECTED",
-            "MISSED",
-            "ONGOING",
-            "ENDED",
-            "FAILED"
-        ],
-        default: "INITIATED",
+      type: String,
+      enum: [
+        "INITIATED",
+        "RINGING",
+        "ACCEPTED",
+        "REJECTED",
+        "MISSED",
+        "ONGOING",
+        "ENDED",
+        "FAILED",
+      ],
+      default: "INITIATED",
     },
     roomId: String,
     tokenCaller: String,
@@ -38,9 +39,10 @@ const callSessionSchema = new mongoose.Schema({
     duration: Number, // seconds
     callChargePerMin: Number,
     totalAmountDeducted: Number,
-    isMissed: { type: Boolean, default: false, },
-    endedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User", },
-
-}, { timestamps: true, versionKey: false });
+    isMissed: { type: Boolean, default: false },
+    endedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  },
+  { timestamps: true, versionKey: false },
+);
 
 module.exports = mongoose.model("CallSession", callSessionSchema);
