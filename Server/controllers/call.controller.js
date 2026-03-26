@@ -66,6 +66,7 @@ const initiateCall = async (req, res, next) => {
                 event: "RINGING",
                 callSessionId: callSession._id.toString(),
                 callType,
+                roomId,
                 callerName: caller.name || 'Someone',
             }
         });
