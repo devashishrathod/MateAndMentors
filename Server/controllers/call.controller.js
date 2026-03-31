@@ -28,14 +28,32 @@ const initiateCall = async (req, res, next) => {
       );
     }
     const receiver = await User.findById(receiverId);
-    if (!receiver) {
-      return throwError(404, "Receiver not found");
+    if (!receiver) return throwError(404, "Receiver not found");
+    const receiverMate = await Mate.findOne({ userId: receiverId });
+    if (!receiverMate) {
+      return throwError(
+        404,
+        "Receiver is not a mate or mentor! Receiver cannot be called.",
+      );
+    }
+    if (receiverMate && (receiverMate?.isBusy || !receiverMate?.isAvailable)) {
+      return throwError(400, "Receiver is busy! Please try calling later.");
     }
     const caller = await User.findById(callerId);
     // EnableX - Create Room
     const roomName = `Call_${callerId}_to_${receiverId}`;
     const roomData = await createRoom(roomName, callType);
     const roomId = roomData.room.room_id;
+    let remainingMinutes = 0;
+    if (callType == "AUDIO") {
+      remainingMinutes = Math.floor(
+        wallet.balances?.INR / minimumBalanceRequired,
+      );
+    } else {
+      remainingMinutes = Math.floor(
+        wallet.balances?.INR / minimumBalanceRequired,
+      );
+    }
     // Create Token for Caller
     const callerToken = await createToken(
       roomId,
@@ -83,6 +101,7 @@ const initiateCall = async (req, res, next) => {
         callSessionId: callSession._id,
         roomId,
         callerToken,
+        remainingMinutes,
       },
     });
   } catch (error) {
